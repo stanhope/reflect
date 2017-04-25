@@ -1,34 +1,16 @@
-// Copyright 2011 Miek Gieben. All rights reserved.
+// Copyright 2017 Phil Stanhope. All rights reserved.
+//
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Reflect is a small name server which sends back the IP address of its client, the
-// recursive resolver.
+// Reflect is a small name server which sends back the IP address of its client.
+//
 // When queried for type A (resp. AAAA), it sends back the IPv4 (resp. v6) address.
-// In the additional section the port number and transport are shown.
+// In the additional section the port number and transport are shown along with
+// EDNS client subnet, QNAME, sequence ID & proxy information.
 //
-// Basic use pattern:
-//
-//	dig @localhost -p 8053 whoami.miek.nl A
-//
-//	;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 2157
-//	;; flags: qr rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
-//	;; QUESTION SECTION:
-//	;whoami.miek.nl.			IN	A
-//
-//	;; ANSWER SECTION:
-//	whoami.miek.nl.		0	IN	A	127.0.0.1
-//
-//	;; ADDITIONAL SECTION:
-//	whoami.miek.nl.		0	IN	TXT	"Port: 56195 (udp)"
-//
-// Similar services: whoami.ultradns.net, whoami.akamai.net. Also (but it
-// is not their normal goal): rs.dns-oarc.net, porttest.dns-oarc.net,
-// amiopen.openresolvers.org.
-//
-// Original version is from: Stephane Bortzmeyer <stephane+grong@bortzmeyer.org>.
-//
-// Adapted to Go (i.e. completely rewritten) by Miek Gieben <miek@miek.nl>.
+// Based on reflect example from Miek Gieben <miek@miek.nl>.
+
 package main
 
 import (
@@ -41,7 +23,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-
 	"github.com/stanhope/dns"
 )
 
